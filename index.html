@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Final Exam Prep Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Final Exam Prep Builder</h1>
+      <p>Create dynamic quizzes, flashcards, and cheat sheets from your own study documents.</p>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>1) Create or Pick Course</h2>
+        <div class="row">
+          <input id="courseName" type="text" placeholder="e.g., Biology Final" />
+          <button id="createCourseBtn">Create Course</button>
+        </div>
+        <select id="courseSelect"></select>
+      </section>
+
+      <section class="panel">
+        <h2>2) Upload Study Material</h2>
+        <p class="hint">Supported: .txt, .md, .csv, .pdf, .docx (pptx optional fallback as plain text extract not included).</p>
+        <input id="fileInput" type="file" multiple />
+        <button id="processFilesBtn">Process Files</button>
+        <div id="uploadStatus" class="status"></div>
+      </section>
+
+      <section class="panel">
+        <h2>3) Generate Learning Content</h2>
+        <div class="row">
+          <button id="generateBtn">Generate Quiz + Flashcards + Cheat Sheet</button>
+          <button id="clearGeneratedBtn" class="danger">Clear Generated Content</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Course Materials</h2>
+        <ul id="materialsList"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Flashcards</h2>
+        <div id="flashcardsContainer" class="grid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Quiz</h2>
+        <div id="quizContainer"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Cheat Sheet</h2>
+        <div id="cheatSheetContainer" class="cheat-sheet"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Study Tips</h2>
+        <ul id="studyTips"></ul>
+      </section>
+    </main>
+
+    <template id="flashcardTemplate">
+      <article class="flashcard">
+        <h3></h3>
+        <p></p>
+      </article>
+    </template>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
