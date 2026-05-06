@@ -25,6 +25,17 @@ No backend is required for this first version. Everything runs in-browser and is
 3. Upload files.
 4. Click **Generate Quiz + Flashcards + Cheat Sheet**.
 
+## Public URL (GitHub Pages)
+
+This repo is configured with a GitHub Actions workflow that auto-deploys to GitHub Pages on each push to `master`.
+
+1. Open your repository on GitHub.
+2. Go to **Settings -> Pages**.
+3. In **Build and deployment**, select **Source: GitHub Actions**.
+4. Push to `master` (or re-run the workflow in the **Actions** tab).
+5. Your live URL will be:
+   - `https://Grahitha25.github.io/study-prep-app/`
+
 ## Notes
 
 - PDF parsing uses `pdf.js` from CDN.
