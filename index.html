@@ -41,8 +41,51 @@
       </section>
 
       <section class="panel">
+        <h2>4) Topic Study (Materials + Browser)</h2>
+        <div class="row">
+          <input id="topicInput" type="text" placeholder="Enter topic (e.g., Photosynthesis light reaction)" />
+          <button id="topicStudyBtn">Find Topic Content</button>
+        </div>
+        <label class="inline-checkbox">
+          <input id="topicUseWeb" type="checkbox" checked />
+          Include browser context (Wikipedia) with course materials
+        </label>
+        <div id="topicStatus" class="status"></div>
+        <div id="topicResults" class="topic-results"></div>
+      </section>
+
+      <section class="panel">
+        <h2>5) Ask AI Study Bot</h2>
+        <p class="hint">Ask any question. The bot answers using uploaded materials and optional web context.</p>
+        <div class="row">
+          <input id="botQuestionInput" type="text" placeholder="Ask a question from your syllabus..." />
+          <button id="askBotBtn">Ask Bot</button>
+          <button id="clearChatBtn" class="danger">Clear Chat</button>
+        </div>
+        <label class="inline-checkbox">
+          <input id="chatUseWeb" type="checkbox" checked />
+          Use browser context for missing concepts
+        </label>
+        <div id="botStatus" class="status"></div>
+        <div id="botChatLog" class="chat-log"></div>
+      </section>
+
+      <section class="panel">
         <h2>Course Materials</h2>
         <ul id="materialsList"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Visual Learning (Images, Trees, Graph Cues)</h2>
+        <p class="hint">Upload images too (.png, .jpg, .jpeg, .gif, .webp). The app also surfaces diagram/graph related cues from your text materials.</p>
+        <div id="visualImageGallery" class="image-gallery"></div>
+        <div id="visualConceptTree" class="concept-tree"></div>
+        <div id="visualCues" class="topic-results"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Easy Syntax & Structure Memory Cards</h2>
+        <div id="syntaxCards" class="grid"></div>
       </section>
 
       <section class="panel">

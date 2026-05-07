@@ -62,6 +62,11 @@ select {
   min-width: 240px;
 }
 
+#topicInput,
+#botQuestionInput {
+  min-width: min(650px, 100%);
+}
+
 button {
   border: none;
   background: #2563eb;
@@ -84,6 +89,15 @@ button.danger:hover {
 .status {
   margin-top: 0.6rem;
   font-size: 0.92rem;
+}
+
+.inline-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
+  color: #334155;
+  font-size: 0.9rem;
 }
 
 .hint {
@@ -150,4 +164,124 @@ ul {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 1rem;
+}
+
+.topic-results {
+  margin-top: 0.8rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.85rem;
+  background: #fcfdff;
+}
+
+.topic-results h3 {
+  margin: 0 0 0.55rem;
+  color: #1d4ed8;
+}
+
+.topic-results .source-badge {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.chat-log {
+  margin-top: 0.8rem;
+  max-height: 420px;
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: #fafafa;
+}
+
+.chat-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.65rem;
+  margin-bottom: 0.55rem;
+  background: #fff;
+}
+
+.chat-item.user {
+  border-left: 4px solid #2563eb;
+}
+
+.chat-item.assistant {
+  border-left: 4px solid #059669;
+}
+
+.chat-role {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 0.8rem;
+}
+
+.image-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.image-card img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  display: block;
+}
+
+.image-card p {
+  margin: 0;
+  padding: 0.45rem;
+  font-size: 0.8rem;
+  color: #334155;
+}
+
+.concept-tree {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: #f8fafc;
+  margin-bottom: 0.8rem;
+}
+
+.tree-root {
+  font-weight: 700;
+  color: #1d4ed8;
+  margin-bottom: 0.5rem;
+}
+
+.tree-list {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.quiz-feedback {
+  margin-top: 0.5rem;
+  padding: 0.45rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.quiz-feedback.good {
+  background: #ecfdf3;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.quiz-feedback.bad {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
