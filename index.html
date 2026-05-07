@@ -11,28 +11,35 @@
   <body>
     <header class="app-header">
       <h1>Final Exam Prep Builder</h1>
-      <p>Create dynamic quizzes, flashcards, and cheat sheets from your own study documents.</p>
+      <p>Calm, beginner-friendly study space for quizzes, visuals, and concept clarity.</p>
     </header>
 
+    <nav class="top-nav">
+      <a href="#setupSection">Setup</a>
+      <a href="#topicSection">Topic Coach</a>
+      <a href="#botSection">Study Bot</a>
+      <a href="#visualSection">Visual Learn</a>
+      <a href="#quizSection">Quiz</a>
+      <a href="#summarySection">Summary</a>
+    </nav>
+
     <main class="layout">
-      <section class="panel">
+      <section id="setupSection" class="panel">
         <h2>1) Create or Pick Course</h2>
         <div class="row">
           <input id="courseName" type="text" placeholder="e.g., Biology Final" />
           <button id="createCourseBtn">Create Course</button>
         </div>
         <select id="courseSelect"></select>
-      </section>
-
-      <section class="panel">
+        <hr />
         <h2>2) Upload Study Material</h2>
-        <p class="hint">Supported: .txt, .md, .csv, .pdf, .docx (pptx optional fallback as plain text extract not included).</p>
-        <input id="fileInput" type="file" multiple />
-        <button id="processFilesBtn">Process Files</button>
+        <p class="hint">Supported: .txt, .md, .csv, .pdf, .docx, images (.png, .jpg, .jpeg, .gif, .webp).</p>
+        <div class="row">
+          <input id="fileInput" type="file" multiple />
+          <button id="processFilesBtn">Process Files</button>
+        </div>
         <div id="uploadStatus" class="status"></div>
-      </section>
-
-      <section class="panel">
+        <hr />
         <h2>3) Generate Learning Content</h2>
         <div class="row">
           <button id="generateBtn">Generate Quiz + Flashcards + Cheat Sheet</button>
@@ -40,31 +47,31 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section id="topicSection" class="panel">
         <h2>4) Topic Study (Materials + Browser)</h2>
         <div class="row">
           <input id="topicInput" type="text" placeholder="Enter topic (e.g., Photosynthesis light reaction)" />
           <button id="topicStudyBtn">Find Topic Content</button>
         </div>
         <label class="inline-checkbox">
-          <input id="topicUseWeb" type="checkbox" checked />
-          Include browser context (Wikipedia) with course materials
+          <input id="topicUseWeb" type="checkbox" />
+          Use browser info only when course material is not enough
         </label>
         <div id="topicStatus" class="status"></div>
         <div id="topicResults" class="topic-results"></div>
       </section>
 
-      <section class="panel">
+      <section id="botSection" class="panel">
         <h2>5) Ask AI Study Bot</h2>
-        <p class="hint">Ask any question. The bot answers using uploaded materials and optional web context.</p>
+        <p class="hint">Simple beginner mode: short explanation, key points, one example, and memory tip.</p>
         <div class="row">
           <input id="botQuestionInput" type="text" placeholder="Ask a question from your syllabus..." />
           <button id="askBotBtn">Ask Bot</button>
           <button id="clearChatBtn" class="danger">Clear Chat</button>
         </div>
         <label class="inline-checkbox">
-          <input id="chatUseWeb" type="checkbox" checked />
-          Use browser context for missing concepts
+          <input id="chatUseWeb" type="checkbox" />
+          Use browser only if materials do not cover this
         </label>
         <div id="botStatus" class="status"></div>
         <div id="botChatLog" class="chat-log"></div>
@@ -75,9 +82,9 @@
         <ul id="materialsList"></ul>
       </section>
 
-      <section class="panel">
+      <section id="visualSection" class="panel">
         <h2>Visual Learning (Images, Trees, Graph Cues)</h2>
-        <p class="hint">Upload images too (.png, .jpg, .jpeg, .gif, .webp). The app also surfaces diagram/graph related cues from your text materials.</p>
+        <p class="hint">Friendly visual cards, relation map, and examples from your own notes.</p>
         <div id="visualImageGallery" class="image-gallery"></div>
         <div id="visualConceptTree" class="concept-tree"></div>
         <div id="visualCues" class="topic-results"></div>
@@ -93,12 +100,12 @@
         <div id="flashcardsContainer" class="grid"></div>
       </section>
 
-      <section class="panel">
+      <section id="quizSection" class="panel">
         <h2>Quiz</h2>
         <div id="quizContainer"></div>
       </section>
 
-      <section class="panel">
+      <section id="summarySection" class="panel">
         <h2>Cheat Sheet</h2>
         <div id="cheatSheetContainer" class="cheat-sheet"></div>
       </section>

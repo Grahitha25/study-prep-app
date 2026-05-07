@@ -207,6 +207,20 @@ function splitSentences(text) {
     .filter((s) => s.length > 35);
 }
 
+function splitSimpleSentences(text, max = 2) {
+  return (text || "")
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, max);
+}
+
+function conciseLine(text, max = 190) {
+  const clean = (text || "").replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  return `${clean.slice(0, max - 3)}...`;
+}
+
 function tokenize(text) {
   return text
     .toLowerCase()
@@ -285,9 +299,49 @@ async function fetchWikipediaContext(query) {
 
   return {
     title: summaryData.title,
-    extract: summaryData.extract,
+    extract: splitSimpleSentences(summaryData.extract, 2).join(" "),
     url: summaryData?.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(firstTitle)}`
   };
+}
+
+function buildBeginnerResponse(question, materialSnippets, webContext) {
+  const best = materialSnippets.slice(0, 3);
+  const firstLine = conciseLine(best[0]?.sentence || "I could not find this clearly in your uploaded material.");
+  const keyPoints = best.map((item) => conciseLine(item.sentence)).slice(0, 3);
+  const exampleLine = conciseLine(best[1]?.sentence || best[0]?.sentence || "Try writing a simple example in your own words.");
+  const memoryTip = keyPoints.length
+    ? `Remember with 3 words: ${topKeywords(keyPoints.join(" "), 3).join(" - ")}.`
+    : "Memory trick: make one flashcard question from this topic and revise twice today.";
+
+  const lines = [
+    `Question: ${question}`,
+    "",
+    "Simple explanation:",
+    firstLine,
+    "",
+    "Key points:"
+  ];
+
+  if (keyPoints.length) {
+    keyPoints.forEach((point, idx) => lines.push(`${idx + 1}. ${point}`));
+  } else {
+    lines.push("1. No direct points found from material yet.");
+  }
+
+  lines.push("");
+  lines.push("One example:");
+  lines.push(exampleLine);
+  lines.push("");
+  lines.push("Memory tip:");
+  lines.push(memoryTip);
+
+  if (webContext) {
+    lines.push("");
+    lines.push(`Quick fallback from browser (${webContext.title}): ${webContext.extract}`);
+    lines.push(`Reference: ${webContext.url}`);
+  }
+
+  return lines.join("\n");
 }
 
 function addBotMessage(course, role, text) {
@@ -473,7 +527,7 @@ async function studyTopic() {
 
   let webContext = null;
   els.topicStatus.textContent = "Finding topic content...";
-  if (useWeb) {
+  if (useWeb && materialSnippets.length < 2) {
     try {
       webContext = await fetchWikipediaContext(topic);
     } catch {
@@ -487,6 +541,11 @@ async function studyTopic() {
 
   course.assistant.topicResult = {
     topic,
+    simpleExplanation: conciseLine(materialSnippets[0]?.sentence || "No clear explanation found in current materials."),
+    keyPoints: materialSnippets.slice(0, 4).map((item) => conciseLine(item.sentence)),
+    memoryTip: materialSnippets.length
+      ? `Remember this topic with: ${topKeywords(materialSnippets.map((item) => item.sentence).join(" "), 3).join(" - ")}`
+      : "Use a short self-made definition and revise it 2 times today.",
     snippets: materialSnippets,
     webContext,
     updatedAt: new Date().toISOString()
@@ -518,7 +577,7 @@ async function askBot() {
   let webContext = null;
   els.botStatus.textContent = "Bot is preparing answer...";
 
-  if (els.chatUseWeb.checked) {
+  if (els.chatUseWeb.checked && materialSnippets.length < 2) {
     try {
       webContext = await fetchWikipediaContext(question);
     } catch {
@@ -526,26 +585,7 @@ async function askBot() {
     }
   }
 
-  const lines = [];
-  if (materialSnippets.length) {
-    lines.push("From your materials:");
-    materialSnippets.forEach((item, idx) => {
-      lines.push(`${idx + 1}. ${item.sentence} (Source: ${item.source})`);
-    });
-  } else {
-    lines.push("I could not find strong matches in uploaded materials for this question.");
-  }
-
-  if (webContext) {
-    lines.push("");
-    lines.push(`From browser context (${webContext.title}):`);
-    lines.push(webContext.extract);
-    lines.push(`Reference: ${webContext.url}`);
-  }
-
-  lines.push("");
-  lines.push("Quick study tip: convert this answer into 2-3 flashcards and test yourself after 30 minutes.");
-  addBotMessage(course, "assistant", lines.join("\n"));
+  addBotMessage(course, "assistant", buildBeginnerResponse(question, materialSnippets, webContext));
 
   saveState();
   renderChat(course);
@@ -679,16 +719,16 @@ function renderQuiz(course) {
       const feedback = form.querySelector(`#feedback-${idx}`);
       if (!chosen) {
         feedback.className = "quiz-feedback bad";
-        feedback.textContent = `No answer selected. Correct answer: ${q.answer}. Context: ${q.context}`;
+        feedback.textContent = `No answer selected. Correct answer: ${q.answer}. Context: ${conciseLine(q.context)}`;
         return;
       }
       if (chosen === q.answer) {
         score += 1;
         feedback.className = "quiz-feedback good";
-        feedback.textContent = `Correct. Context: ${q.context} (Source: ${q.source})`;
+        feedback.textContent = `Correct. Context: ${conciseLine(q.context)} (Source: ${q.source})`;
       } else {
         feedback.className = "quiz-feedback bad";
-        feedback.textContent = `Not quite. You selected "${chosen}", but correct is "${q.answer}". Why: ${q.context} (Source: ${q.source})`;
+        feedback.textContent = `Not quite. You selected "${chosen}", but correct is "${q.answer}". Why: ${conciseLine(q.context)} (Source: ${q.source})`;
       }
     });
     result.className = score >= Math.ceil(quiz.length * 0.6) ? "correct" : "incorrect";
@@ -759,13 +799,13 @@ function renderVisualLearning(course) {
     const root = document.createElement("div");
     root.className = "tree-root";
     root.textContent = "Concept Tree";
-    const list = document.createElement("ul");
-    list.className = "tree-list";
-    top.slice(0, 5).forEach((parentWord, idx) => {
-      const li = document.createElement("li");
-      const children = top.filter((_, childIdx) => childIdx !== idx).slice(0, 2);
-      li.textContent = `${parentWord} -> ${children.join(", ")}`;
-      list.append(li);
+    const list = document.createElement("div");
+    list.className = "flow-row";
+    top.slice(0, 6).forEach((word, idx) => {
+      const node = document.createElement("div");
+      node.className = "flow-node";
+      node.textContent = idx === 0 ? `Core: ${word}` : `-> ${word}`;
+      list.append(node);
     });
     els.visualConceptTree.append(root, list);
   }
@@ -775,9 +815,9 @@ function renderVisualLearning(course) {
     els.visualCues.textContent = "No graph/diagram cues detected yet. Upload more descriptive material and regenerate.";
   } else {
     const heading = document.createElement("h3");
-    heading.textContent = "Detected Visual Cues from Materials";
+    heading.textContent = "Clear examples and visual cues from your materials";
     const ul = document.createElement("ul");
-    cues.forEach((cue) => {
+    cues.slice(0, 5).forEach((cue) => {
       const li = document.createElement("li");
       li.textContent = `${cue.sentence} (Source: ${cue.source})`;
       ul.append(li);
@@ -821,23 +861,37 @@ function renderTopicResults(course) {
   heading.textContent = `Topic: ${result.topic}`;
   els.topicResults.append(heading);
 
-  const materialHeading = document.createElement("p");
-  materialHeading.innerHTML = "<strong>From uploaded materials</strong>";
-  els.topicResults.append(materialHeading);
+  const simpleHeading = document.createElement("p");
+  simpleHeading.innerHTML = "<strong>Simple explanation</strong>";
+  const simpleText = document.createElement("p");
+  simpleText.textContent = result.simpleExplanation || "No simple explanation available yet.";
+  els.topicResults.append(simpleHeading, simpleText);
 
-  if (result.snippets?.length) {
+  const keyHeading = document.createElement("p");
+  keyHeading.innerHTML = "<strong>Key points</strong>";
+  els.topicResults.append(keyHeading);
+
+  if (result.keyPoints?.length) {
     const ul = document.createElement("ul");
-    result.snippets.forEach((item) => {
+    result.keyPoints.forEach((point) => {
       const li = document.createElement("li");
-      const sentenceSpan = document.createElement("span");
-      sentenceSpan.textContent = item.sentence;
-      const badge = document.createElement("span");
-      badge.className = "source-badge";
-      badge.textContent = item.source;
-      li.append(sentenceSpan, badge);
+      li.textContent = point;
       ul.append(li);
     });
     els.topicResults.append(ul);
+  }
+
+  const memoryHeading = document.createElement("p");
+  memoryHeading.innerHTML = "<strong>Memory tip</strong>";
+  const memoryText = document.createElement("p");
+  memoryText.textContent = result.memoryTip || "Create one flashcard from this topic now.";
+  els.topicResults.append(memoryHeading, memoryText);
+
+  if (result.snippets?.length) {
+    const sourceText = document.createElement("p");
+    sourceText.className = "hint";
+    sourceText.textContent = `Main source: ${result.snippets[0].source}`;
+    els.topicResults.append(sourceText);
   } else {
     const empty = document.createElement("p");
     empty.textContent = "No matching material snippet found. Try a broader topic keyword.";
@@ -846,7 +900,7 @@ function renderTopicResults(course) {
 
   if (result.webContext) {
     const webTitle = document.createElement("p");
-    webTitle.innerHTML = "<strong>From browser context</strong>";
+    webTitle.innerHTML = "<strong>Browser fallback (short)</strong>";
     els.topicResults.append(webTitle);
 
     const webText = document.createElement("p");

@@ -4,15 +4,17 @@
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f4f6fb;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  background: #f3f6f7;
   color: #1f2937;
+  line-height: 1.5;
+  scroll-behavior: smooth;
 }
 
 .app-header {
-  background: #111827;
-  color: #f9fafb;
-  padding: 1.5rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  color: #f8fafc;
+  padding: 1.4rem 1.3rem;
 }
 
 .app-header h1 {
@@ -21,21 +23,57 @@ body {
 
 .app-header p {
   margin: 0;
-  opacity: 0.9;
+  opacity: 0.88;
+}
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid #dbe3ea;
+  padding: 0.65rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.top-nav a {
+  text-decoration: none;
+  color: #0f172a;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: #eef2f7;
+  font-size: 0.86rem;
+}
+
+.top-nav a:hover {
+  background: #dbeafe;
 }
 
 .layout {
-  width: min(1100px, 92vw);
+  width: min(1180px, 92vw);
   margin: 1.25rem auto 2rem;
   display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
 }
 
 .panel {
   background: #ffffff;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 6px 20px rgba(17, 24, 39, 0.08);
+  border-radius: 14px;
+  padding: 1rem 1rem 1.1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+}
+
+#setupSection,
+#topicSection,
+#botSection,
+#quizSection,
+#summarySection {
+  grid-column: 1 / -1;
 }
 
 .panel h2 {
@@ -46,13 +84,14 @@ body {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 input,
 select,
 button {
   font-size: 0.95rem;
-  padding: 0.6rem 0.7rem;
+  padding: 0.62rem 0.72rem;
   border-radius: 8px;
   border: 1px solid #d1d5db;
 }
@@ -72,6 +111,7 @@ button {
   background: #2563eb;
   color: #fff;
   cursor: pointer;
+  font-weight: 600;
 }
 
 button:hover {
@@ -89,6 +129,7 @@ button.danger:hover {
 .status {
   margin-top: 0.6rem;
   font-size: 0.92rem;
+  color: #334155;
 }
 
 .inline-checkbox {
@@ -103,6 +144,12 @@ button.danger:hover {
 .hint {
   font-size: 0.88rem;
   color: #6b7280;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 1rem 0;
 }
 
 ul {
@@ -135,9 +182,10 @@ ul {
 
 .quiz-question {
   border: 1px solid #e5e7eb;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0.8rem;
   margin-bottom: 0.7rem;
+  background: #fbfdff;
 }
 
 .quiz-question h4 {
@@ -171,7 +219,7 @@ ul {
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   padding: 0.85rem;
-  background: #fcfdff;
+  background: #f8fbff;
 }
 
 .topic-results h3 {
@@ -191,7 +239,7 @@ ul {
 
 .chat-log {
   margin-top: 0.8rem;
-  max-height: 420px;
+  max-height: 360px;
   overflow: auto;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -212,7 +260,7 @@ ul {
 }
 
 .chat-item.assistant {
-  border-left: 4px solid #059669;
+  border-left: 4px solid #0f766e;
 }
 
 .chat-role {
@@ -250,8 +298,8 @@ ul {
 
 .concept-tree {
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 0.75rem;
+  border-radius: 12px;
+  padding: 0.8rem;
   background: #f8fafc;
   margin-bottom: 0.8rem;
 }
@@ -265,6 +313,20 @@ ul {
 .tree-list {
   margin: 0;
   padding-left: 1.1rem;
+}
+
+.flow-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.flow-node {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  border-radius: 999px;
+  font-size: 0.82rem;
 }
 
 .quiz-feedback {
